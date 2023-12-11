@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS posts_by_topic(
      content  text,
      postId   int,
      createdPostAt timestamp,
-     createdTopicAt date,
-     PRIMARY KEY ((topicId, createdTopicAt), createdPostAt)
+     postDate date,
+     PRIMARY KEY ((topicId, postDate), createdPostAt)
 ) WITH CLUSTERING ORDER BY (createdPostAt DESC);
 
 -- Заполняем данными
@@ -42,18 +42,18 @@ VALUES (1, 'User1', 'user1@example.com', 0, 'Content User1 2', 2 ,'2023-11-15 00
 INSERT INTO posts_by_user (userId, username, email, topicId, content, postId, createdPostAt)
 VALUES (2, 'User2', 'user2@example.com', 0, 'Content User2 0', 0 ,'2023-11-05 00:00:00+0000');
 
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 0, 'User0', 'user0@example.com', 'Content User0 0', 0, '2023-11-01 00:00:00+0000', '2023-10-29');
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 0, 'User0', 'user0@example.com', 'Content User0 1', 1, '2023-11-06 00:00:00+0000', '2023-10-29');
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 0', 0, '2023-11-01 00:00:01+0000', '2023-10-29');
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 1', 1, '2023-11-01 00:00:02+0000', '2023-10-29');
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 2', 2, '2023-11-15 00:00:00+0000', '2023-10-29');
-INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, createdTopicAt)
-VALUES (0, 2, 'User2', 'user2@example.com', 'Content User2 0', 0, '2023-11-05 00:00:00+0000', '2023-10-29');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 0, 'User0', 'user0@example.com', 'Content User0 0', 0, '2023-11-01 00:00:00+0000', '2023-11-01');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 0, 'User0', 'user0@example.com', 'Content User0 1', 1, '2023-11-06 00:00:00+0000', '2023-11-06');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 0', 0, '2023-11-01 00:00:01+0000', '2023-11-01');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 1', 1, '2023-11-01 00:00:02+0000', '2023-11-01');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 1, 'User1', 'user1@example.com', 'Content User1 2', 2, '2023-11-15 00:00:00+0000', '2023-11-15');
+INSERT INTO posts_by_topic (topicId, userId, username, email, content, postId, createdPostAt, postDate)
+VALUES (0, 2, 'User2', 'user2@example.com', 'Content User2 0', 0, '2023-11-05 00:00:00+0000', '2023-11-05');
 
 -- 1) Запрос, который бы доставал посты заданного пользователя упорядоченные
 -- по времени создания поста - сначала новые.
@@ -79,7 +79,5 @@ AND createdPostAt >'2023-11-03';
 -- Запрос должен возвращать user_id, username, post_id, время создания поста.
 SELECT userId, username, postId, createdPostAt FROM posts_by_topic
 WHERE topicId = 0
-AND createdTopicAt = '2023-10-29'
-AND createdPostAt >= '2023-11-01 00:00:00'
-AND createdPostAt <= '2023-11-01 23:59:59'
+AND postDate = '2023-11-01'
 ORDER BY createdPostAt DESC;
