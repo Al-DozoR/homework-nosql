@@ -80,4 +80,6 @@ AND createdPostAt >'2023-11-03';
 SELECT userId, username, postId, createdPostAt FROM posts_by_topic
 WHERE topicId = 0
 AND createdTopicAt = '2023-10-29'
+AND createdPostAt >= '2023-11-01 00:00:00'
+AND createdPostAt <= '2023-11-01 23:59:59'
 ORDER BY createdPostAt DESC;
